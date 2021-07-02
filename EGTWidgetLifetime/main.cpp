@@ -36,31 +36,31 @@ void buttonBuilder(std::shared_ptr<StaticGrid> parent, std::string text)
 
 int main(int argc, char** argv)
 {
-		Application app(argc, argv);
+	Application app(argc, argv);
 
-		TopWindow window;
+	TopWindow window;
 
-		// create the grid to manage layout
-		auto grid = createGrid(window, 3);
+	// create the grid to manage layout
+	auto grid = createGrid(window, 3);
 
-		// This object has been created on the stack frame
-		Button button1(window, "Button 1");
-		align(button1, AlignFlag::top | AlignFlag::center);
-
-
-		// This is a button created with a smart pointer
-		auto button2 = std::make_shared<Button>(window, "Button 2");
-		center(button2);
+	// This object has been created on the stack frame
+	Button button1(window, "Button 1");
+	align(button1, AlignFlag::top | AlignFlag::center);
 
 
-		// Create 3 buttons in the grid
-		buttonBuilder(grid, "Button 3");
-		buttonBuilder(grid, "Button 4");
-		buttonBuilder(grid, "Button 5");
+	// This is a button created with a smart pointer
+	auto button2 = std::make_shared<Button>(window, "Button 2");
+	center(button2);
 
 
-		window.show();
-		return app.run();
+	// Create 3 buttons in the grid
+	buttonBuilder(grid, "Button 3");
+	buttonBuilder(grid, "Button 4");
+	buttonBuilder(grid, "Button 5");
+
+
+	window.show();
+	return app.run();
 }
 
 
