@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 		} else {
 			boxSizer.orient(Orientation::horizontal);
 		}
-		boxSizer.layout();
+		//boxSizer.layout();
 	});
 
 	window.show();
