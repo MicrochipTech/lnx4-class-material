@@ -35,9 +35,22 @@ int main(int argc, char** argv)
 	for(auto i = 0; i < 4; i++)
 	{
 		auto button = std::make_shared<Button>("Button " + std::to_string(i));
-		button->margin(10);
-		boxSizer.add(button);
+		button->margin(5);
+		// this will help us when changing the layout
+		boxSizer.add(left(button));
 	}
+
+	// create a button to trigger layout changes
+	Button changeLayout(window, "Layout", Rect(600, 200, 80, 60));
+	changeLayout.on_click([&boxSizer] (Event& ev) {
+		// toggle the orientation
+		if (boxSizer.orient() == Orientation::horizontal) {
+			boxSizer.orient(Orientation::vertical);
+		} else {
+			boxSizer.orient(Orientation::horizontal);
+		}
+		boxSizer.layout();
+	});
 
 	window.show();
 	return app.run();
