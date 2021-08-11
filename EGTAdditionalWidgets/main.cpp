@@ -26,29 +26,29 @@ void createEditBoxes(std::shared_ptr<StaticGrid> parent)
 {
 	// create a simple text box
 	auto textBox1 = std::make_shared<TextBox>("Some Text");
-	// change the font
 	textBox1->align(AlignFlag::center);
 	textBox1->font(Font("Sans", 30));
 
-	// finally add it to the parent grid
+	// add it to the parent
 	parent->add(expand(textBox1));
 
 	// create a second text box
 	auto textBox2 = std::make_shared<TextBox>("Validate");
-	// but use the on change event to update textBox1
+	// respond to the on_change and update textBox1
 	textBox2->on_text_changed([textBox1, textBox2] () {
 		textBox1->text(textBox2->text());
 	});
 
-	// use a lambda function to validate the entry
+	// add a validator
 	textBox2->add_validator_function([] (const std::string& input) {
-		// only allow alphabetic characters
+		// only alphabetic characters
 		if (std::isalpha(input[0]) || std::isspace(input[0]))
 			return true;
 		else
 			return false;
 	});
 	textBox2->input_validation_enabled(true);
+
 
 	parent->add(expand(textBox2));
 }
@@ -118,16 +118,16 @@ void createListBoxes(std::shared_ptr<StaticGrid> parent)
 	list0->add_item(std::make_shared<StringItem>("Item 1"));
 	list0->add_item(std::make_shared<StringItem>("Item 2"));
 	list0->add_item(std::make_shared<StringItem>("Item 3"));
+
 	parent->add(expand(list0));
 
-	// using a lambda function to handle change of selection
+	// use a lambda function to handle change of selection
 	list0->on_selected([label, list0] (size_t selectedItem) {
 		auto item = list0->item_at(selectedItem);
 		label->text("Selected: " + item->text());
 	});
 
-
-	// create a listbox from an array
+	// create a listbox from an array of items
 	std::vector<std::shared_ptr<StringItem>> items = {
 			std::make_shared<StringItem>("One"),
 			std::make_shared<StringItem>("Two"),
@@ -136,8 +136,7 @@ void createListBoxes(std::shared_ptr<StaticGrid> parent)
 	auto list1 = std::make_shared<ListBox>(items);
 	parent->add(expand(list1));
 
-
-	// create a listbox with images
+	// create a list box with images
 	auto list2 = std::make_shared<ListBox>();
 	list2->add_item(std::make_shared<StringItem>("Help", Image("icon:help.png")));
 	list2->add_item(std::make_shared<StringItem>("Info", Image("icon:info.png")));
@@ -152,18 +151,18 @@ std::shared_ptr<egt::Slider> createSliders(std::shared_ptr<StaticGrid> parent)
 	auto sizer = std::make_shared<BoxSizer>(Orientation::flex);
 	parent->add(expand(sizer));
 
-	// the first slider is vertical and holds integers from 0-100
-    auto slider0 = std::make_shared<egt::Slider>(egt::Rect(0, 0, 40, 80), 0, 100, 0, Orientation::vertical);
-    slider0->value(50);
-    sizer->add(slider0);
+	// first slider
+	auto slider0 = std::make_shared<Slider>(Rect(0, 0, 40,80), 0, 100, 0, Orientation::vertical);
+	slider0->value(50);
+	sizer->add(slider0);
 
-    // the second slider is horizontal and holds floating point values
-    auto slider1 = std::make_shared<egt::SliderF>(egt::Rect(0, 0, 200, 80), 100, 0);
-    slider1->value(75);
-    // display a round handle and the current value in the label
-    slider1->slider_flags().set({egt::SliderF::SliderFlag::round_handle,
-                                 egt::SliderF::SliderFlag::show_label});
-    sizer->add(expand(slider1));
+	// second slider
+	auto slider1 = std::make_shared<SliderF>(Rect(0, 0, 200, 80), 100, 0);
+	slider1->value(75);
+	// change the style
+	slider1->slider_flags().set({SliderF::SliderFlag::round_handle,
+								SliderF::SliderFlag::show_label});
+	sizer->add(expand(slider1));
 
     // We will use the value from slider0 elsewhere
     return slider0;
@@ -172,22 +171,24 @@ std::shared_ptr<egt::Slider> createSliders(std::shared_ptr<StaticGrid> parent)
 void createMeters(std::shared_ptr<StaticGrid> parent, std::shared_ptr<Slider> slider)
 {
 	// create a level meter
-    auto levelMeter = std::make_shared<egt::LevelMeter>();
-    levelMeter->num_bars(10);
-    parent->add(egt::expand(levelMeter));
+	auto levelMeter = std::make_shared<LevelMeter>();
+	levelMeter->num_bars(10);
+	parent->add(expand(levelMeter));
 
-    // create an analog meter
-    auto analogMeter = std::make_shared<egt::AnalogMeter>();
-    analogMeter->font(Font("Sans", 12));
-    parent->add(egt::expand(analogMeter));
+	// create an analog meter
+	auto analogMeter = std::make_shared<AnalogMeter>();
+	analogMeter->font(Font("Sans", 12));
+	parent->add(expand(analogMeter));
 
-    // connect the slider value to the control values and update them when it changes
-    slider->live_update(true);
-    slider->on_value_changed([slider, levelMeter, analogMeter] () {
-    	int sliderValue = slider->value();
-    	levelMeter->value(sliderValue);
-    	analogMeter->value(sliderValue);
-    });
+	// use the slider value to control the neters
+	slider->live_update(true);
+	slider->on_value_changed([slider, levelMeter, analogMeter] () {
+		int sliderValue = slider->value();
+		levelMeter->value(sliderValue);
+		analogMeter->value(sliderValue);
+	});
+
+
 }
 
 int main(int argc, char** argv)
@@ -206,10 +207,10 @@ int main(int argc, char** argv)
 	// create some edit boxes
 	createEditBoxes(leftGrid);
 
-	// create check boxes, note the assignment to keep the smart pointer in scope
+	// create check boxes
 	std::unique_ptr<ButtonGroup> buttonGroup = createCheckBoxes(leftGrid, radioButtonGroup);
 
-	// create the listboxes
+	// create list boxes
 	createListBoxes(rightGrid);
 
 	// create sliders
