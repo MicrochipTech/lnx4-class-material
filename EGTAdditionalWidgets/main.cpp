@@ -180,7 +180,7 @@ void createMeters(std::shared_ptr<StaticGrid> parent, std::shared_ptr<Slider> sl
 	analogMeter->font(Font("Sans", 12));
 	parent->add(expand(analogMeter));
 
-	// use the slider value to control the neters
+	// use the slider value to control the meters
 	slider->live_update(true);
 	slider->on_value_changed([slider, levelMeter, analogMeter] () {
 		int sliderValue = slider->value();
