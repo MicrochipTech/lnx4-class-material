@@ -41,7 +41,7 @@ int main(int argc, char** argv)
 	}
 
 	// create a button to trigger layout changes
-	Button changeLayout(window, "Layout", Rect(600, 200, 80, 60));
+	Button changeLayout(window, "Layout", Rect(360, 120, 80, 60));
 	changeLayout.on_click([&boxSizer] (Event& ev) {
 		// toggle the orientation
 		if (boxSizer.orient() == Orientation::horizontal) {
@@ -49,7 +49,6 @@ int main(int argc, char** argv)
 		} else {
 			boxSizer.orient(Orientation::horizontal);
 		}
-		//boxSizer.layout();
 	});
 
 	window.show();
